@@ -21,9 +21,6 @@
             android:name=".SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
-        <activity
             android:name=".Home"
             android:exported="true">
             <intent-filter>
@@ -38,7 +35,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
+            android:value="AIzaSyB5vw15_VlaV5ePLuRfYyh2ytgXvluyfX4" />
     </application>
 
 </manifest>
