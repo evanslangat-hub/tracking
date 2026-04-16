@@ -46,6 +46,16 @@
             android:layout_marginTop="4dp"/>
     </LinearLayout>
 
+    <!-- List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/alertsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <!-- Empty State -->
     <LinearLayout
         android:id="@+id/emptyState"
@@ -82,101 +92,5 @@
             android:textSize="14sp"
             android:layout_marginTop="4dp"/>
     </LinearLayout>
-
-    <!-- Alerts Card -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/activeAlertCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp"
-        app:layout_constraintTop_toBottomOf="@id/header">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@android:drawable/ic_menu_myplaces"
-                    app:tint="#2563EB"
-                    android:background="@drawable/bg_dot"
-                    android:padding="12dp"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
-
-                    <TextView
-                        android:id="@+id/tvAlertDestName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nairobi Hospital"
-                        android:textStyle="bold"
-                        android:textColor="#1E293B"
-                        android:textSize="18sp"/>
-
-                    <TextView
-                        android:id="@+id/tvAlertStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tracking location..."
-                        android:textColor="#3B82F6"
-                        android:textSize="14sp"/>
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnStopActiveAlert"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Stop"
-                    android:textColor="#EF4444"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#F1F5F9"
-                android:layout_marginVertical="16dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Alert distance"
-                    android:textColor="#64748B"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tvAlertDistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="500m"
-                    android:textColor="#1E293B"
-                    android:textStyle="bold"
-                    android:textSize="14sp"/>
-            </LinearLayout>
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

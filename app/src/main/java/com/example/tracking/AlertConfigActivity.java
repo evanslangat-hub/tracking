@@ -137,6 +137,7 @@ public class AlertConfigActivity extends AppCompatActivity {
         }
 
         Intent serviceIntent = new Intent(this, LocationAlertService.class);
+        serviceIntent.setAction(LocationAlertService.ACTION_ADD_ALERT);
         serviceIntent.putExtra("lat", lat);
         serviceIntent.putExtra("lng", lng);
         serviceIntent.putExtra("distance", distanceMeters);
