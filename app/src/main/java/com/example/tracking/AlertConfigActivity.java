@@ -79,6 +79,13 @@ public class AlertConfigActivity extends AppCompatActivity {
                 startAlertService();
             }
         });
+
+        findViewById(R.id.btnStopAlert).setOnClickListener(v -> {
+            Intent serviceIntent = new Intent(this, LocationAlertService.class);
+            stopService(serviceIntent);
+            Toast.makeText(this, "Alert stopped", Toast.LENGTH_SHORT).show();
+            finish();
+        });
     }
 
     private boolean checkAndRequestPermissions() {
