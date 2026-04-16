@@ -39,17 +39,32 @@ public class LocationAlertService extends Service {
         createNotificationChannel();
     }
 
+    public static final String ACTION_STOP_SERVICE = "STOP_SERVICE";
+    public static String currentDestination = "";
+    public static float currentDistance = 0;
+    private boolean alertTriggered = false;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
+        if (intent == null || ACTION_STOP_SERVICE.equals(intent.getAction())) {
             stopSelf();
             return START_NOT_STICKY;
+        }
+
+        // Cancel any existing alert notifications when setting a new alert
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        if (manager != null) {
+            manager.cancel(2);
         }
 
         destLat = intent.getDoubleExtra("lat", 0);
         destLng = intent.getDoubleExtra("lng", 0);
         alertDistance = intent.getFloatExtra("distance", 500);
         destinationName = intent.getStringExtra("name");
+        
+        currentDestination = destinationName;
+        currentDistance = alertDistance;
+        alertTriggered = false; // Reset trigger for the new alert
 
         Notification notification = getStickyNotification("Tracking location for " + destinationName);
         
@@ -92,10 +107,10 @@ public class LocationAlertService extends Service {
                 destLat, destLng, results);
         float distanceInMeters = results[0];
 
-        if (distanceInMeters >= alertDistance) {
+        // Trigger alert only when within the specified distance and not already triggered
+        if (distanceInMeters <= alertDistance && !alertTriggered) {
+            alertTriggered = true;
             sendAlertNotification(distanceInMeters);
-            // Optionally stop service after alert
-            // stopSelf();
         }
     }
 
@@ -134,6 +149,8 @@ public class LocationAlertService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        currentDestination = "";
+        currentDistance = 0;
         if (fusedLocationClient != null && locationCallback != null) {
             fusedLocationClient.removeLocationUpdates(locationCallback);
         }

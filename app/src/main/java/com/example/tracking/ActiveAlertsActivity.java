@@ -38,8 +38,14 @@ public class ActiveAlertsActivity extends AppCompatActivity {
         if (isServiceRunning(LocationAlertService.class)) {
             activeAlertCard.setVisibility(View.VISIBLE);
             emptyState.setVisibility(View.GONE);
-            // In a real app, you'd get the name from a database or shared preferences
-            // For now, we'll use a placeholder or check if we can pass it
+            
+            tvDestName.setText(LocationAlertService.currentDestination);
+            TextView tvDistance = findViewById(R.id.tvAlertDistance);
+            if (LocationAlertService.currentDistance >= 1000) {
+                tvDistance.setText(String.format("%.1f km", LocationAlertService.currentDistance / 1000.0));
+            } else {
+                tvDistance.setText((int)LocationAlertService.currentDistance + " m");
+            }
         } else {
             activeAlertCard.setVisibility(View.GONE);
             emptyState.setVisibility(View.VISIBLE);
