@@ -48,8 +48,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void navigateToMap(String destination) {
-        Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra("destination", destination);
-        startActivity(intent);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("destination", destination);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 }

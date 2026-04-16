@@ -1,6 +1,7 @@
 package com.example.tracking;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -17,14 +18,43 @@ import com.example.tracking.model.Destination;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends AppCompatActivity {
+import android.location.Address;
+import android.location.Geocoder;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     RecyclerView recyclerView;
+    private GoogleMap mMap;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.homeMap);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
         recyclerView = findViewById(R.id.recentRecycler);
 
@@ -34,10 +64,8 @@ public class Home extends AppCompatActivity {
         list.add(new Destination("Junction Mall", "Ngong Rd · 7.1 km", "🛒"));
 
         DestinationAdapter adapter = new DestinationAdapter(list, this, item -> {
-            // NAVIGATION TO SEARCH SCREEN
-            Intent intent = new Intent(Home.this, SearchActivity.class);
-            intent.putExtra("name", item.name);
-            startActivity(intent);
+            // Updated: Instead of just going to search, show on home map
+            showOnMap(item.name);
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -45,7 +73,49 @@ public class Home extends AppCompatActivity {
 
         findViewById(R.id.searchBar).setOnClickListener(v -> {
             Intent intent = new Intent(Home.this, SearchActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 100);
         });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 14f));
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            String destination = data.getStringExtra("destination");
+            if (destination != null) {
+                showOnMap(destination);
+            }
+        }
+    }
+
+    private void showOnMap(String name) {
+        if (mMap == null) return;
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(name, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
