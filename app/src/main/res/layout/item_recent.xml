@@ -28,14 +28,17 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:fontFamily="sans-serif"/>
+            android:fontFamily="sans-serif"
+            android:id="@+id/itemIcon"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="City Centre · 3.2 km"
             android:textSize="12sp"
-            android:textColor="#888"/>
+            android:textColor="#888"
+            android:id="@+id/itemName"/>
     </LinearLayout>
 
     <!-- ARROW -->
@@ -44,6 +47,7 @@
         android:layout_height="wrap_content"
         android:text="›"
         android:textSize="18sp"
-        android:textColor="#CCC"/>
+        android:textColor="#CCC"
+        android:id="@+id/itemSub"/>
 
 </LinearLayout>
