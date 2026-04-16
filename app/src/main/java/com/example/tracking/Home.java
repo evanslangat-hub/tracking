@@ -45,6 +45,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
     private String currentDestinationName = "Nairobi Hospital"; // Default or last searched
+    private double currentDestLat = -1.2921; // Default Nairobi
+    private double currentDestLng = 36.8219;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         findViewById(R.id.btnSetAlert).setOnClickListener(v -> {
             Intent intent = new Intent(Home.this, AlertConfigActivity.class);
             intent.putExtra("destination_name", currentDestinationName);
+            intent.putExtra("lat", currentDestLat);
+            intent.putExtra("lng", currentDestLng);
             startActivity(intent);
         });
     }
@@ -140,6 +144,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                currentDestLat = address.getLatitude();
+                currentDestLng = address.getLongitude();
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(latLng).title(name));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
