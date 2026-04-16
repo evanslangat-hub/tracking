@@ -44,6 +44,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     RecyclerView recyclerView;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
+    private String currentDestinationName = "Nairobi Hospital"; // Default or last searched
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             Intent intent = new Intent(Home.this, SearchActivity.class);
             startActivityForResult(intent, 100);
         });
+
+        findViewById(R.id.btnSetAlert).setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, AlertConfigActivity.class);
+            intent.putExtra("destination_name", currentDestinationName);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -126,6 +133,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     private void showOnMap(String name) {
         if (mMap == null) return;
+        currentDestinationName = name;
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocationName(name, 1);
