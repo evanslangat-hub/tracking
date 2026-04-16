@@ -2,17 +2,14 @@ package com.example.tracking;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class SearchActivity extends AppCompatActivity {
 
-    TextView selectedPlace;
+    EditText selectedPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +19,37 @@ public class SearchActivity extends AppCompatActivity {
         selectedPlace = findViewById(R.id.selectedPlace);
 
         String name = getIntent().getStringExtra("name");
-        selectedPlace.setText(name);
+        if (name != null) {
+            selectedPlace.setText(name);
+        }
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-        findViewById(R.id.btnSelect).setOnClickListener(v -> {
-            Intent intent = new Intent(this, MapActivity.class);
-            intent.putExtra("destination", name);
-            startActivity(intent);
+        findViewById(R.id.btnClearSearch).setOnClickListener(v -> selectedPlace.setText(""));
+
+        // HANDLE SEARCH ACTION FROM KEYBOARD
+        selectedPlace.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String query = selectedPlace.getText().toString();
+                if (!query.isEmpty()) {
+                    navigateToMap(query);
+                }
+                return true;
+            }
+            return false;
         });
+
+        findViewById(R.id.btnSelect).setOnClickListener(v -> {
+            String query = selectedPlace.getText().toString();
+            if (!query.isEmpty()) {
+                navigateToMap(query);
+            }
+        });
+    }
+
+    private void navigateToMap(String destination) {
+        Intent intent = new Intent(this, MapActivity.class);
+        intent.putExtra("destination", destination);
+        startActivity(intent);
     }
 }
