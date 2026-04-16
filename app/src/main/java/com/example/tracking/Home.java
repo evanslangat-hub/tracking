@@ -20,6 +20,8 @@ import java.util.List;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -71,7 +73,27 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        findViewById(R.id.searchBar).setOnClickListener(v -> {
+        EditText searchEditText = findViewById(R.id.searchEditText);
+        findViewById(R.id.btnSearchNow).setOnClickListener(v -> {
+            String query = searchEditText.getText().toString();
+            if (!query.isEmpty()) {
+                showOnMap(query);
+            }
+        });
+
+        searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String query = searchEditText.getText().toString();
+                if (!query.isEmpty()) {
+                    showOnMap(query);
+                }
+                return true;
+            }
+            return false;
+        });
+
+        findViewById(R.id.searchContainer).setOnClickListener(v -> {
+            // Optional: still allow going to search activity if clicking the background
             Intent intent = new Intent(Home.this, SearchActivity.class);
             startActivityForResult(intent, 100);
         });
@@ -113,9 +135,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(latLng).title(name));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+            } else {
+                Toast.makeText(this, "Location not found: " + name, Toast.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();
         }
     }
 }
