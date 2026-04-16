@@ -9,13 +9,17 @@ public class AlertModel {
     public double lng;
     public float alertDistance;
     public boolean triggered;
+    public boolean vibrate;
+    public boolean sound;
 
-    public AlertModel(String destinationName, double lat, double lng, float alertDistance) {
+    public AlertModel(String destinationName, double lat, double lng, float alertDistance, boolean vibrate, boolean sound) {
         this.id = UUID.randomUUID().toString();
         this.destinationName = destinationName;
         this.lat = lat;
         this.lng = lng;
         this.alertDistance = alertDistance;
         this.triggered = false;
+        this.vibrate = vibrate;
+        this.sound = sound;
     }
 }

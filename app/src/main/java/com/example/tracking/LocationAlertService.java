@@ -55,8 +55,10 @@ public class LocationAlertService extends Service {
             double lat = intent.getDoubleExtra("lat", 0);
             double lng = intent.getDoubleExtra("lng", 0);
             float dist = intent.getFloatExtra("distance", 500);
+            boolean vibrate = intent.getBooleanExtra("vibrate", true);
+            boolean sound = intent.getBooleanExtra("sound", true);
             
-            activeAlerts.add(new AlertModel(name, lat, lng, dist));
+            activeAlerts.add(new AlertModel(name, lat, lng, dist, vibrate, sound));
             updateForegroundNotification();
             startLocationUpdates();
         } else if (ACTION_STOP_ALERT.equals(action)) {
@@ -143,14 +145,23 @@ public class LocationAlertService extends Service {
 
     private void sendAlertNotification(AlertModel alert, float distance) {
         NotificationManager manager = getSystemService(NotificationManager.class);
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+        
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Destination Reached!")
                 .setContentText("You are " + (int)distance + "m from " + alert.destinationName)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .build();
-        manager.notify(alert.id.hashCode(), notification);
+                .setAutoCancel(true);
+
+        if (!alert.vibrate) {
+            builder.setVibrate(new long[]{0L});
+        }
+        
+        if (!alert.sound) {
+            builder.setSound(null);
+        }
+
+        manager.notify(alert.id.hashCode(), builder.build());
     }
 
     private Notification getStickyNotification(String text) {

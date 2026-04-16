@@ -276,6 +276,7 @@
                             android:textSize="14sp"/>
                     </LinearLayout>
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchVibration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -318,6 +319,7 @@
                             android:textSize="14sp"/>
                     </LinearLayout>
                     <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchSound"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"

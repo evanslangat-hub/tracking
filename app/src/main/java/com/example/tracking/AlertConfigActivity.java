@@ -9,6 +9,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -136,12 +138,17 @@ public class AlertConfigActivity extends AppCompatActivity {
             distanceMeters *= 1000;
         }
 
+        boolean vibrate = ((SwitchMaterial) findViewById(R.id.switchVibration)).isChecked();
+        boolean sound = ((SwitchMaterial) findViewById(R.id.switchSound)).isChecked();
+
         Intent serviceIntent = new Intent(this, LocationAlertService.class);
         serviceIntent.setAction(LocationAlertService.ACTION_ADD_ALERT);
         serviceIntent.putExtra("lat", lat);
         serviceIntent.putExtra("lng", lng);
         serviceIntent.putExtra("distance", distanceMeters);
         serviceIntent.putExtra("name", destinationName);
+        serviceIntent.putExtra("vibrate", vibrate);
+        serviceIntent.putExtra("sound", sound);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
