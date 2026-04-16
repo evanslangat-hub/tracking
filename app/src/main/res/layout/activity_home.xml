@@ -139,6 +139,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
+                <!-- View Active Alerts Button -->
+                    <TextView
+                        android:id="@+id/btnViewActiveAlerts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Active Alert"
+                        android:textSize="12sp"
+                        android:textColor="#FFFFFF"
+                        android:background="#10B981"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="5dp"
+                        android:layout_gravity="bottom|start"
+                        android:layout_margin="8dp"
+                        android:visibility="gone"/>
+
                     <!-- Button -->
                     <TextView
                         android:id="@+id/btnSetAlert"

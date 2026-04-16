@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tracking">
         <activity
+            android:name=".ActiveAlertsActivity"
+            android:exported="false" />
+        <activity
             android:name=".AlertConfigActivity"
             android:exported="false" />
         <activity

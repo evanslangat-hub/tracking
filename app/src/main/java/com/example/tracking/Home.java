@@ -1,8 +1,11 @@
 package com.example.tracking;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +50,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     private String currentDestinationName = "Nairobi Hospital"; // Default or last searched
     private double currentDestLat = -1.2921; // Default Nairobi
     private double currentDestLng = 36.8219;
+    private View btnViewActiveAlerts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +112,38 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             intent.putExtra("lng", currentDestLng);
             startActivity(intent);
         });
+
+        btnViewActiveAlerts = findViewById(R.id.btnViewActiveAlerts);
+        btnViewActiveAlerts.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, ActiveAlertsActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    private void updateActiveAlertVisibility() {
+        if (isServiceRunning(LocationAlertService.class)) {
+            btnViewActiveAlerts.setVisibility(View.VISIBLE);
+        } else {
+            btnViewActiveAlerts.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager != null) {
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateActiveAlertVisibility();
     }
 
     @Override
